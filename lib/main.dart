@@ -1,127 +1,127 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_cached_assets/utils.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final dir = await getApplicationDocumentsDirectory();
+  await Hive.openBox("myBox", path: dir.path);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      // debugShowMaterialGrid: true,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Cached Assets',
+      home: SharedPreferencesDemo(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class SharedPreferencesDemo extends StatefulWidget {
+  const SharedPreferencesDemo({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  SharedPreferencesDemoState createState() => SharedPreferencesDemoState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
+  final imageUrl =
+      "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
+  final gifUrl = "https://i.gifer.com/J4o.gif";
+  final myJson =
+      "https://lottie.host/52fb4acd-10a3-43b2-9667-7729b7309284/hpuwuYuwVO.json";
+  Uint8List? image;
+  final offerImageJson =
+      "https://s3.ap-south-1.amazonaws.com/innopay-dev/Banner/eid-1-innopay.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240619T132030Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA5PCHL76R5WIEFNEH%2F20240619%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=ac924f5cf1c105c5d353113c7b54c941211db0a5c042c1eae7b07337cab9eaea";
+  Future<Uint8List> getUint8ListFromNetworkImage() async {
+    final Box box = Hive.box("myBox");
+    final data = box.get('image');
+    if (data != null) {
+      return data;
+    } else {
+      final http.Response response = await http.get(Uri.parse(imageUrl));
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+        box.put("image", bytes);
+        return bytes;
+      } else {
+        throw Exception('Failed to load image');
+      }
+    }
+  }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  Future<Uint8List> getUint8ListFromNetworkJson() async {
+    final Box box = Hive.box("myBox");
+    final data = box.get('json');
+    if (data != null) {
+      return data;
+    } else {
+      final response =
+          await Utils.getConvertedUintListData(image: offerImageJson);
+      if (response != null) {
+        box.put("json", response);
+        return response;
+      } else {
+        throw Exception('Failed to load image');
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final value = getUint8ListFromNetworkJson().then((value) {
+      setState(() {
+        image = value;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('SharedPreferences Demo'),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          // image != null
+          //     ? Image.memory(image!)
+          //     : const CircularProgressIndicator.adaptive(),
+          // Lottie.network(offerImageJson, height: 300, width: 300),
+          image != null
+              ? Lottie.memory(image!)
+              : const CircularProgressIndicator.adaptive(),
+
+          // Lottie.network(
+          //   "https://lottie.host/embed/52fb4acd-10a3-43b2-9667-7729b7309284/hpuwuYuwVO.json",
+          //   height: 300,
+          //   delegates: const LottieDelegates(),
+          //   options: LottieOptions(enableMergePaths: true),
+          //   errorBuilder: (context, error, stackTrace) =>
+          //       Text(error.toString()),
+          //   onWarning: (p0) => const Text("data"),
+          // )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          setState(() {});
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

@@ -92,7 +92,7 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SharedPreferences Demo'),
+        title: const Text('Cached Assets'),
       ),
       body: Column(
         children: [

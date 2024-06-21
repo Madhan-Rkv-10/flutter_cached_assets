@@ -38,29 +38,29 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
   final imageUrl =
       "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
   final gifUrl = "https://i.gifer.com/J4o.gif";
+  final Box box = Hive.box("myBox");
   final myJson =
       "https://lottie.host/52fb4acd-10a3-43b2-9667-7729b7309284/hpuwuYuwVO.json";
   Uint8List? image;
   final offerImageJson =
       "https://s3.ap-south-1.amazonaws.com/innopay-dev/Banner/eid-1-innopay.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240619T132030Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIA5PCHL76R5WIEFNEH%2F20240619%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=ac924f5cf1c105c5d353113c7b54c941211db0a5c042c1eae7b07337cab9eaea";
-  Future<Uint8List> getUint8ListFromNetworkImage() async {
-    final Box box = Hive.box("myBox");
+  Future<Uint8List?> getUint8ListFromNetworkImage() async {
     final data = box.get('image');
     if (data != null) {
       return data;
     } else {
-      final http.Response response = await http.get(Uri.parse(imageUrl));
-      if (response.statusCode == 200) {
-        final bytes = response.bodyBytes;
-        box.put("image", bytes);
-        return bytes;
+      final response =
+          await Utils.getConvertedUintListData(image: offerImageJson);
+      if (response != null) {
+        box.put("image", response);
+        return response;
       } else {
-        throw Exception('Failed to load image');
+        return null;
       }
     }
   }
 
-  Future<Uint8List> getUint8ListFromNetworkJson() async {
+  Future<Uint8List?> getUint8ListFromNetworkJson() async {
     final Box box = Hive.box("myBox");
     final data = box.get('json');
     if (data != null) {
@@ -72,7 +72,8 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
         box.put("json", response);
         return response;
       } else {
-        throw Exception('Failed to load image');
+        return null;
+        // throw Exception('Failed to load image');
       }
     }
   }
@@ -80,7 +81,6 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
   @override
   void initState() {
     super.initState();
-
     final value = getUint8ListFromNetworkJson().then((value) {
       setState(() {
         image = value;

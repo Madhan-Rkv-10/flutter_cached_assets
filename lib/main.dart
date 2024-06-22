@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cached_assets/common_memory_image.dart';
 import 'package:flutter_cached_assets/utils.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -73,7 +74,6 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
         return response;
       } else {
         return null;
-        // throw Exception('Failed to load image');
       }
     }
   }
@@ -96,23 +96,13 @@ class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
       ),
       body: Column(
         children: [
-          // image != null
-          //     ? Image.memory(image!)
-          //     : const CircularProgressIndicator.adaptive(),
-          // Lottie.network(offerImageJson, height: 300, width: 300),
           image != null
-              ? Lottie.memory(image!)
+              ? CommomMemoryImage(
+                  imageType: ImageType.json,
+                  image: image!,
+                  height: 100,
+                )
               : const CircularProgressIndicator.adaptive(),
-
-          // Lottie.network(
-          //   "https://lottie.host/embed/52fb4acd-10a3-43b2-9667-7729b7309284/hpuwuYuwVO.json",
-          //   height: 300,
-          //   delegates: const LottieDelegates(),
-          //   options: LottieOptions(enableMergePaths: true),
-          //   errorBuilder: (context, error, stackTrace) =>
-          //       Text(error.toString()),
-          //   onWarning: (p0) => const Text("data"),
-          // )
         ],
       ),
       floatingActionButton: FloatingActionButton(

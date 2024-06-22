@@ -11,11 +11,15 @@ class CommomMemoryImage extends StatelessWidget {
     required this.imageType,
     required this.image,
     this.height,
+    this.reverse = false,
     this.width,
+    this.fit = BoxFit.contain,
   });
   final ImageType imageType;
   final Uint8List image;
   final double? height, width;
+  final BoxFit fit;
+  final bool reverse;
   @override
   Widget build(BuildContext context) {
     switch (imageType) {
@@ -25,18 +29,26 @@ class CommomMemoryImage extends StatelessWidget {
           width: width,
           height: height,
           cacheHeight: height != null ? int.parse("$height") : null,
+          cacheWidth: width != null ? int.parse("$width") : null,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
         );
       case ImageType.svg:
         return SvgPicture.memory(
           image,
           width: width,
           height: height,
+          fit: fit,
+          placeholderBuilder: (context) => const Icon(Icons.error),
         );
       case ImageType.json:
         return LottieBuilder.memory(
           image,
           width: width,
           height: height,
+          fit: fit,
+          reverse: reverse,
+          errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
         );
     }
   }

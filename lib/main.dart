@@ -22,19 +22,19 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cached Assets',
-      home: SharedPreferencesDemo(),
+      home: FlutterCachedAssets(),
     );
   }
 }
 
-class SharedPreferencesDemo extends StatefulWidget {
-  const SharedPreferencesDemo({super.key});
+class FlutterCachedAssets extends StatefulWidget {
+  const FlutterCachedAssets({super.key});
 
   @override
-  SharedPreferencesDemoState createState() => SharedPreferencesDemoState();
+  FlutterCachedAssetsState createState() => FlutterCachedAssetsState();
 }
 
-class SharedPreferencesDemoState extends State<SharedPreferencesDemo> {
+class FlutterCachedAssetsState extends State<FlutterCachedAssets> {
   // final imageUrl =
   //     "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
   // final gifUrl = "https://i.gifer.com/J4o.gif";

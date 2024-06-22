@@ -5,7 +5,13 @@ import 'package:flutter_cached_assets/utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
+/// A widget that displays an image from a [Uint8List] in various formats such as
+/// raster image, SVG, or Lottie animation.
 class CommomMemoryImage extends StatelessWidget {
+  /// Creates a [CommomMemoryImage] widget.
+  ///
+  /// The [imageType] and [image] parameters are required.
+  /// The [height], [width], [reverse], and [fit] parameters are optional.
   const CommomMemoryImage({
     super.key,
     required this.imageType,
@@ -15,21 +21,36 @@ class CommomMemoryImage extends StatelessWidget {
     this.width,
     this.fit = BoxFit.contain,
   });
+
+  /// The type of the image. This determines how the image data is interpreted and displayed.
   final ImageType imageType;
+
+  /// The raw image data in the form of a [Uint8List].
   final Uint8List image;
-  final double? height, width;
+
+  /// The optional height of the image.
+  final double? height;
+
+  /// The optional width of the image.
+  final double? width;
+
+  /// How the image should be inscribed into the space allocated during layout.
   final BoxFit fit;
+
+  /// Whether to play the animation in reverse. Only applicable if the [imageType] is [ImageType.json].
   final bool reverse;
+
   @override
   Widget build(BuildContext context) {
+    // print(int.parse(height.toString()));
     switch (imageType) {
       case ImageType.global:
         return Image.memory(
           image,
           width: width,
           height: height,
-          cacheHeight: height != null ? int.parse("$height") : null,
-          cacheWidth: width != null ? int.parse("$width") : null,
+          cacheHeight: height?.toInt(),
+          cacheWidth: width?.toInt(),
           fit: fit,
           errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
         );

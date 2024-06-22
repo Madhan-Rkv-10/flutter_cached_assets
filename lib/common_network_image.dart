@@ -26,15 +26,14 @@ import 'package:lottie/lottie.dart';
 /// ```
 class CommonNetworkImage extends StatelessWidget {
   const CommonNetworkImage(
-      {Key? key,
+      {super.key,
       this.width,
       this.height,
       this.imageType = ImageType.global,
       this.fit = BoxFit.cover,
       this.repeatLottie = false,
       this.optionalImage,
-      required this.imageUrl})
-      : super(key: key);
+      required this.imageUrl});
   final double? width;
   final double? height;
   final BoxFit fit;
@@ -51,7 +50,6 @@ class CommonNetworkImage extends StatelessWidget {
         height: height,
         width: width,
         fit: BoxFit.fill,
-        // width: MediaQuery.of(context).size.width,
         errorBuilder: (s, f, fs) => optionalImage != null
             ? LottieBuilder.network(
                 optionalImage!,
@@ -116,7 +114,7 @@ class CommonNetworkImage extends StatelessWidget {
                       height: height,
                       width: width,
                       fit: BoxFit.contain,
-                      placeholderBuilder: (context) => SizedBox(),
+                      placeholderBuilder: (context) => const SizedBox(),
                     )
                   : optionalImage!.contains(".gif")
                       ? Image.network(
@@ -167,8 +165,4 @@ class CommonNetworkImage extends StatelessWidget {
       );
     }
   }
-}
-
-extension GetErrorImage on num? {
-  getErrorImage() => Icon(Icons.error, size: double.parse("$this"));
 }

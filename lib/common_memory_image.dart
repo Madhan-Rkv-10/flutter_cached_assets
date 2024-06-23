@@ -17,7 +17,7 @@ class CommomMemoryImage extends StatelessWidget {
     required this.imageType,
     required this.image,
     this.height,
-    this.reverse = false,
+    this.repeat = false,
     this.width,
     this.fit = BoxFit.contain,
   });
@@ -38,7 +38,7 @@ class CommomMemoryImage extends StatelessWidget {
   final BoxFit fit;
 
   /// Whether to play the animation in reverse. Only applicable if the [imageType] is [ImageType.json].
-  final bool reverse;
+  final bool repeat;
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +67,9 @@ class CommomMemoryImage extends StatelessWidget {
           image,
           width: width,
           height: height,
+          renderCache: RenderCache.drawingCommands,
           fit: fit,
-          reverse: reverse,
+          repeat: repeat,
           errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
         );
     }

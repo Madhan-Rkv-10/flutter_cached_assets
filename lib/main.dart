@@ -35,9 +35,6 @@ class FlutterCachedAssets extends StatefulWidget {
 }
 
 class FlutterCachedAssetsState extends State<FlutterCachedAssets> {
-  // final imageUrl =
-  //     "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
-  // final gifUrl = "https://i.gifer.com/J4o.gif";
   final Box box = Hive.box("myBox");
 
   Uint8List? gif;
@@ -53,13 +50,12 @@ class FlutterCachedAssetsState extends State<FlutterCachedAssets> {
   String pngImage =
       "https://cdn.pixabay.com/photo/2016/11/05/20/09/grooming-1801287_1280.png";
   final myJson =
-      "https://lottie.host/52fb4acd-10a3-43b2-9667-7729b7309284/hpuwuYuwVO.json";
+      "https://lottie.host/embed/df1ab053-079b-498a-8f3f-e430117521ca/igi7qLSh2J.json";
   String jpgImage =
       "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg";
   @override
   void initState() {
     super.initState();
-
     Future.wait<Uint8List?>([
       Utils.getAndUpdateToLocal(
               boxName: "myBox", keyName: 'json', image: myJson)
@@ -112,55 +108,73 @@ class FlutterCachedAssetsState extends State<FlutterCachedAssets> {
       ),
       body: Column(
         children: [
-          if (json != null)
-            CommomMemoryImage(
-              imageType: ImageType.json,
-              image: json!,
-              height: 100,
-            )
-          else
-            const CircularProgressIndicator.adaptive(),
-          if (svg != null)
-            CommomMemoryImage(
-              imageType: ImageType.svg,
-              image: svg!,
-              height: 100,
-            )
-          else
-            const CircularProgressIndicator.adaptive(),
-          if (gif != null)
-            CommomMemoryImage(
-              imageType: ImageType.global,
-              image: gif!,
-              height: 100,
-            )
-          else
-            const CircularProgressIndicator.adaptive(),
-          if (png != null)
-            CommomMemoryImage(
-              imageType: ImageType.global,
-              image: png!,
-              height: 100,
-            )
-          else
-            const CircularProgressIndicator.adaptive(),
-          if (jpeg != null)
-            CommomMemoryImage(
-              imageType: ImageType.global,
-              image: jpeg!,
-              height: 100,
-            )
-          else
-            const CircularProgressIndicator.adaptive(),
+          ColorFiltered(
+            colorFilter:
+                const ColorFilter.mode(Colors.transparent, BlendMode.color),
+            child: HorizontalWidget(
+                image: (json != null)
+                    ? CommomMemoryImage(
+                        imageType: ImageType.json,
+                        image: json!,
+                        repeat: true,
+                        height: 100,
+                      )
+                    : const CircularProgressIndicator.adaptive(),
+                text: "JSON"),
+          ),
+          HorizontalWidget(
+              image: (svg != null)
+                  ? CommomMemoryImage(
+                      imageType: ImageType.svg,
+                      image: svg!,
+                      height: 100,
+                    )
+                  : const CircularProgressIndicator.adaptive(),
+              text: "SVG"),
+          HorizontalWidget(
+              image: (gif != null)
+                  ? CommomMemoryImage(
+                      imageType: ImageType.global,
+                      image: gif!,
+                      height: 100,
+                    )
+                  : const CircularProgressIndicator.adaptive(),
+              text: "GiF"),
+          HorizontalWidget(
+              image: (png != null)
+                  ? CommomMemoryImage(
+                      imageType: ImageType.global,
+                      image: png!,
+                      height: 100,
+                    )
+                  : const CircularProgressIndicator.adaptive(),
+              text: "PNG"),
+          HorizontalWidget(
+              image: (jpeg != null)
+                  ? CommomMemoryImage(
+                      imageType: ImageType.global,
+                      image: jpeg!,
+                      height: 100,
+                    )
+                  : const CircularProgressIndicator.adaptive(),
+              text: "JPEG")
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {});
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    );
+  }
+}
+
+class HorizontalWidget extends StatelessWidget {
+  const HorizontalWidget({super.key, required this.image, required this.text});
+  final Widget image;
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(flex: 2, child: image),
+        Expanded(child: Text(text)),
+      ],
     );
   }
 }

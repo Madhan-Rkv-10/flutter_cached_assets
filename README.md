@@ -4,9 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flutter Cached Assets Project</title>
+
 </head>
 <body>
     <h1>Flutter Cached Assets Project</h1>
+    <table align="center" style="margin: 0px auto;">
+  <tr>
+    <td style="text-align: center;">
+      <div>
+        <img src="output/output.gif" alt="CoverSliderView" height="250">
+        <p><a href="lib/main.dart" target="_blank">Flutter Cached Assets</a></p>
+      </div>
+    </td>
+  </tr>
+  <tr> 
+  </tr>
+</table>
     <h2>Table of Contents</h2>
     <ul>
         <li><a href="#overview">Overview</a></li>
@@ -107,3 +120,5 @@ cd flutter-cached-assets</code></pre>
     <p>This project is licensed under the MIT License - see the <a href="LICENSE">LICENSE</a> file for details.</p>
 </body>
 </html>
+
+

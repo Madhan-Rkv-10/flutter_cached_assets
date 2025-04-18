@@ -119,11 +119,11 @@ extension GetImageType on String {
 extension GetStringType on RawImageType {
   String getImageType() {
     if (this == RawImageType.global) {
-      return "PNG";
+      return ".png";
     } else if (this == RawImageType.svg) {
-      return "svg";
+      return ".svg";
     } else {
-      return "json";
+      return ".json";
     }
   }
 }
